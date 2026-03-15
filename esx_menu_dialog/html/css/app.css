@@ -1,0 +1,154 @@
+@import url("https://fonts.googleapis.com/css2?family=Anuphan:wght@200;300;400;500;600;700&family=Inter:wght@300;400;500;600;700&family=Mitr:wght@300;400;500;600;700&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400..700&display=swap");
+@font-face {
+  font-family: ChaKraCustom;
+  src: url("../font/ChakraPetch-Medium.ttf");
+  unicode-range: U+0-FF, U+20-7F;
+}
+
+*{
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -o-user-select: none;
+  user-select: none;
+  overflow: hidden;
+  font-family: ChaKraCustom, Anuphan, sans-serif;
+  color: rgb(255 255 255);
+  font-weight: 200;
+}
+
+#controls {
+	font-size: 0.85em;
+	
+	position: absolute;
+	bottom: 40;
+	right: 40;
+}
+
+.controls {
+	display: none;
+}
+
+.dialog {
+	background-color: rgba(14, 14, 14, 0.9);
+	position: absolute;
+	overflow: hidden;
+	top: 50%;
+	left: 50%;
+	width: 300px;
+	height: auto;
+	transform: translate(-50%, -50%);
+	border-radius: 0px;
+	padding: 8px;
+	border-radius: 6px;
+	/* box-shadow: rgba(0, 0, 0, 0.4) 0px 2px 4px, rgba(0, 0, 0, 0.3) 0px 7px 13px -3px, rgba(0, 0, 0, 0.2) 0px -2px 0px inset; */
+}
+
+.head {
+	display: flex;
+	flex-basis: 100%;
+	align-items: center;
+	
+}
+
+.dialog.big {
+	height: auto;
+}
+
+.dialog .head {
+	background-color: transparent;
+	font-size: 0.95em;
+	margin-bottom: 10px;
+	display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.dialog .head span::before {
+	content: "";
+	align-items: center;
+	display: inline-block;
+	height: 100%;
+	vertical-align: middle;
+}
+
+.dialog input[type="text"] {
+  font-size: 0.85em;
+  font-weight: 200;
+	width: 100%;
+	height: 38px;
+  outline: 0;
+  border: 0;
+  background-color: rgb(255, 255, 255, 0.05);
+
+  text-align: left;
+  transition: all 0.2s ease-in-out;
+  border-radius: 0px;
+  padding: 10px;
+  -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -o-user-select: none;
+    user-select: none;
+    overflow: hidden;
+    border-radius: 5px;
+}
+
+.dialog input[type="text"]:active, .dialog input[type="text"]:hover {
+  color: rgb(172, 172, 172);
+}
+
+.dialog textarea {
+	width: 100%;
+	height: 128px;
+}
+
+.dialog button[name="submit"] {
+	width: 17.6%;
+	height: 32px;
+  margin-left: 160px;
+  font-weight: 300;
+  color: #adea78;
+  border: 1px solid #adea78;
+  border-radius: 6px;
+  text-transform: uppercase;
+  background: 0;
+  outline: 0;
+  transition: all 0.1s ease-in-out;
+}
+
+.dialog button {
+  z-index: 9999;
+	transform: translate(-0%, 50%);
+}
+
+.dialog button[name="cancel"] {
+	width: 17.6%;
+	height: 32px;
+  margin-left: 80px;
+  border: 1px solid #ea8379;
+  border-radius: 6px;
+  text-transform: uppercase;
+  font-weight: 200;
+  color: #ea8379;
+  outline: 0;
+  background: 0;
+  transition: all 0.1s ease-in-out;
+}
+
+.dialog button[name="cancel"]:hover {
+  letter-spacing: 1px;
+  color: #e83625;
+  width: 17.6%;
+  border: 1.2px solid #e83625;
+  border-radius: 6px;
+}
+
+.dialog button[name="submit"]:hover {
+  letter-spacing: 1px;
+  color: #7fe825;
+  width: 17.6%;
+  border: 1.2px solid #7fe825;
+  border-radius: 6px;
+}
