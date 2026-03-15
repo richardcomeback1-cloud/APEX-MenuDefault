@@ -200,6 +200,16 @@ function AudioPlay(name) {
 
 				switch (data.control) {
 
+					case 'ESC': {
+						let focused = ESX_MENU.getFocused();
+
+						if (typeof focused != 'undefined') {
+							ESX_MENU.cancel(focused.namespace, focused.name);
+						}
+
+						break;
+					}
+
 					case 'ENTER': {
 						let focused = ESX_MENU.getFocused();
 
@@ -221,6 +231,12 @@ function AudioPlay(name) {
 
 						if (typeof focused != 'undefined') {
 							ESX_MENU.cancel(focused.namespace, focused.name);
+						} else {
+							for (let namespace in ESX_MENU.opened) {
+								for (let name in ESX_MENU.opened[namespace]) {
+									ESX_MENU.cancel(namespace, name);
+								}
+							}
 						}
 
 						break;

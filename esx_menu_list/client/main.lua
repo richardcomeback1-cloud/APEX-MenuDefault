@@ -4,15 +4,21 @@ Citizen.CreateThread(function()
 
 	while ESX == nil do
 		TriggerEvent('esx:getSharedObject', function(obj) ESX = obj end)
-		Citizen.Wait(0)
+		Citizen.Wait(200)
 	end
 
 	local MenuType    = 'list'
 	local OpenedMenus = {}
+	local OpenedMenuCount = 0
 
 	local openMenu = function(namespace, name, data)
+		local menuKey = namespace .. '_' .. name
 
-		OpenedMenus[namespace .. '_' .. name] = true
+		if not OpenedMenus[menuKey] then
+			OpenedMenus[menuKey] = true
+			OpenedMenuCount = OpenedMenuCount + 1
+		end
+
 		SendNUIMessage({
 			action    = 'openMenu',
 			namespace = namespace,
@@ -27,22 +33,18 @@ Citizen.CreateThread(function()
 	end
 
 	local closeMenu = function(namespace, name)
+		local menuKey = namespace .. '_' .. name
 
-		OpenedMenus[namespace .. '_' .. name] = nil
-		local OpenedMenuCount = 0
+		if OpenedMenus[menuKey] then
+			OpenedMenus[menuKey] = nil
+			OpenedMenuCount = math.max(OpenedMenuCount - 1, 0)
+		end
 
 		SendNUIMessage({
 			action    = 'closeMenu',
 			namespace = namespace,
-			name      = name,
-			data      = data
+			name      = name
 		})
-
-		for k,v in pairs(OpenedMenus) do
-			if v == true then
-				OpenedMenuCount = OpenedMenuCount + 1
-			end
-		end
 
 		if OpenedMenuCount == 0 then
 			SetNuiFocus(false)
@@ -70,6 +72,25 @@ Citizen.CreateThread(function()
 		end
 
 		cb('OK')
+	end)
+
+
+	Citizen.CreateThread(function()
+		while true do
+			local sleep = 1000
+
+			if OpenedMenuCount > 0 then
+				sleep = 0
+				DisableAllControlActions(0)
+				DisableAllControlActions(1)
+				DisableAllControlActions(2)
+				DisableControlAction(0, 200, true) -- Pause menu
+				DisableControlAction(0, 322, true) -- ESC
+				DisableFrontendThisFrame()
+			end
+
+			Citizen.Wait(sleep)
+		end
 	end)
 
 end)

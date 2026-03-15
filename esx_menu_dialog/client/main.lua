@@ -1,23 +1,28 @@
 Citizen.CreateThread(function()
 	-- internal variables
 	ESX               = nil
-	local Timeouts    = {}
-	local GUI         = {}
-	GUI.Time          = 0
+	local focusTimeout = nil
 	local MenuType    = 'dialog'
 	local OpenedMenus = {}
+	local OpenedMenuCount = 0
 
 	while ESX == nil do
 		TriggerEvent('esx:getSharedObject', function(obj) ESX = obj end)
-		Citizen.Wait(0)
+		Citizen.Wait(200)
 	end
 
 	local openMenu = function(namespace, name, data)
-		for i=1, #Timeouts, 1 do
-			ESX.ClearTimeout(Timeouts[i])
+		if focusTimeout ~= nil then
+			ESX.ClearTimeout(focusTimeout)
+			focusTimeout = nil
 		end
 
-		OpenedMenus[namespace .. '_' .. name] = true
+		local menuKey = namespace .. '_' .. name
+
+		if not OpenedMenus[menuKey] then
+			OpenedMenus[menuKey] = true
+			OpenedMenuCount = OpenedMenuCount + 1
+		end
 
 		SendNUIMessage({
 			action    = 'openMenu',
@@ -26,29 +31,25 @@ Citizen.CreateThread(function()
 			data      = data
 		})
 
-		local timeoutId = ESX.SetTimeout(200, function()
+		focusTimeout = ESX.SetTimeout(200, function()
 			SetNuiFocus(true, true)
+			focusTimeout = nil
 		end)
-
-		table.insert(Timeouts, timeoutId)
 	end
 
 	local closeMenu = function(namespace, name)
-		OpenedMenus[namespace .. '_' .. name] = nil
-		local OpenedMenuCount                 = 0
+		local menuKey = namespace .. '_' .. name
+
+		if OpenedMenus[menuKey] then
+			OpenedMenus[menuKey] = nil
+			OpenedMenuCount = math.max(OpenedMenuCount - 1, 0)
+		end
 
 		SendNUIMessage({
 			action    = 'closeMenu',
 			namespace = namespace,
-			name      = name,
-			data      = data
+			name      = name
 		})
-
-		for k,v in pairs(OpenedMenus) do
-			if v == true then
-				OpenedMenuCount = OpenedMenuCount + 1
-			end
-		end
 
 		if OpenedMenuCount == 0 then
 			SetNuiFocus(false)
@@ -111,28 +112,19 @@ Citizen.CreateThread(function()
 
 	Citizen.CreateThread(function()
 		while true do
-			Citizen.Wait(10)
-			local OpenedMenuCount = 0
-
-			for k,v in pairs(OpenedMenus) do
-				if v == true then
-					OpenedMenuCount = OpenedMenuCount + 1
-				end
-			end
+			local sleep = 1000
 
 			if OpenedMenuCount > 0 then
-				DisableControlAction(0, 1,   true) -- LookLeftRight
-				DisableControlAction(0, 2,   true) -- LookUpDown
-				DisableControlAction(0, 142, true) -- MeleeAttackAlternate
-				DisableControlAction(0, 106, true) -- VehicleMouseControlOverride
-				DisableControlAction(0, 12, true) -- WeaponWheelUpDown
-				DisableControlAction(0, 14, true) -- WeaponWheelNext
-				DisableControlAction(0, 15, true) -- WeaponWheelPrev
-				DisableControlAction(0, 16, true) -- SelectNextWeapon
-				DisableControlAction(0, 17, true) -- SelectPrevWeapon
-			else
-				Citizen.Wait(500)
+				sleep = 0
+				DisableAllControlActions(0)
+				DisableAllControlActions(1)
+				DisableAllControlActions(2)
+				DisableControlAction(0, 200, true) -- Pause menu
+				DisableControlAction(0, 322, true) -- ESC
+				DisableFrontendThisFrame()
 			end
+
+			Citizen.Wait(sleep)
 		end
 	end)
 end)
