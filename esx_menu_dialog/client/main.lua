@@ -116,15 +116,11 @@ Citizen.CreateThread(function()
 
 			if OpenedMenuCount > 0 then
 				sleep = 0
-				DisableControlAction(0, 1,   true) -- LookLeftRight
-				DisableControlAction(0, 2,   true) -- LookUpDown
-				DisableControlAction(0, 142, true) -- MeleeAttackAlternate
-				DisableControlAction(0, 106, true) -- VehicleMouseControlOverride
-				DisableControlAction(0, 12, true) -- WeaponWheelUpDown
-				DisableControlAction(0, 14, true) -- WeaponWheelNext
-				DisableControlAction(0, 15, true) -- WeaponWheelPrev
-				DisableControlAction(0, 16, true) -- SelectNextWeapon
-				DisableControlAction(0, 17, true) -- SelectPrevWeapon
+				DisableAllControlActions(0)
+				DisableAllControlActions(1)
+				DisableAllControlActions(2)
+				DisableControlAction(0, 200, true) -- Pause menu
+				DisableControlAction(0, 322, true) -- ESC
 			end
 
 			Citizen.Wait(sleep)

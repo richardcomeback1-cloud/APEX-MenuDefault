@@ -74,4 +74,22 @@ Citizen.CreateThread(function()
 		cb('OK')
 	end)
 
+
+	Citizen.CreateThread(function()
+		while true do
+			local sleep = 1000
+
+			if OpenedMenuCount > 0 then
+				sleep = 0
+				DisableAllControlActions(0)
+				DisableAllControlActions(1)
+				DisableAllControlActions(2)
+				DisableControlAction(0, 200, true) -- Pause menu
+				DisableControlAction(0, 322, true) -- ESC
+			end
+
+			Citizen.Wait(sleep)
+		end
+	end)
+
 end)
