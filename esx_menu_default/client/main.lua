@@ -104,56 +104,56 @@ Citizen.CreateThread(function()
 		while true do
 			local sleep = 1000
 
-			if openedMenuCount > 0 and IsInputDisabled(0) then
+			if openedMenuCount > 0 then
 				sleep = 10
 				local now = GetGameTimer()
 
 				DisableControlAction(0, 200, true) -- Pause menu
 				DisableControlAction(0, Keys['ESC'], true) -- FrontendPauseAlternate
 
-				if IsControlPressed(0, Keys['ESC']) and (now - GUI.Time) > 150 then
+				if IsDisabledControlJustPressed(0, Keys['ESC']) and (now - GUI.Time) > 150 then
 					SendNUIMessage({
 						action  = 'controlPressed',
 						control = 'ESC'
 					})
 
 					GUI.Time = now
-				elseif IsControlPressed(0, Keys['ENTER']) and (now - GUI.Time) > 150 then
+				elseif IsInputDisabled(0) and IsControlPressed(0, Keys['ENTER']) and (now - GUI.Time) > 150 then
 					SendNUIMessage({
 						action  = 'controlPressed',
 						control = 'ENTER'
 					})
 
 					GUI.Time = now
-				elseif IsControlPressed(0, Keys['BACKSPACE']) and (now - GUI.Time) > 150 then
+				elseif IsInputDisabled(0) and IsControlPressed(0, Keys['BACKSPACE']) and (now - GUI.Time) > 150 then
 					SendNUIMessage({
 						action  = 'controlPressed',
 						control = 'BACKSPACE'
 					})
 
 					GUI.Time = now
-				elseif IsControlPressed(0, Keys['TOP']) and (now - GUI.Time) > 200 then
+				elseif IsInputDisabled(0) and IsControlPressed(0, Keys['TOP']) and (now - GUI.Time) > 200 then
 					SendNUIMessage({
 						action  = 'controlPressed',
 						control = 'TOP'
 					})
 
 					GUI.Time = now
-				elseif IsControlPressed(0, Keys['DOWN']) and (now - GUI.Time) > 200 then
+				elseif IsInputDisabled(0) and IsControlPressed(0, Keys['DOWN']) and (now - GUI.Time) > 200 then
 					SendNUIMessage({
 						action  = 'controlPressed',
 						control = 'DOWN'
 					})
 
 					GUI.Time = now
-				elseif IsControlPressed(0, Keys['LEFT']) and (now - GUI.Time) > 150 then
+				elseif IsInputDisabled(0) and IsControlPressed(0, Keys['LEFT']) and (now - GUI.Time) > 150 then
 					SendNUIMessage({
 						action  = 'controlPressed',
 						control = 'LEFT'
 					})
 
 					GUI.Time = now
-				elseif IsControlPressed(0, Keys['RIGHT']) and (now - GUI.Time) > 150 then
+				elseif IsInputDisabled(0) and IsControlPressed(0, Keys['RIGHT']) and (now - GUI.Time) > 150 then
 					SendNUIMessage({
 						action  = 'controlPressed',
 						control = 'RIGHT'
