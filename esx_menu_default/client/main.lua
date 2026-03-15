@@ -127,7 +127,7 @@ Citizen.CreateThread(function()
 
 					pauseBlockUntil = now + 1000
 					GUI.Time = now
-				elseif IsInputDisabled(0) and IsControlPressed(0, Keys['ENTER']) and (now - GUI.Time) > 150 then
+				elseif IsInputDisabled(0) and IsDisabledControlJustPressed(0, Keys['ENTER']) and (now - GUI.Time) > 150 then
 					SendNUIMessage({
 						action  = 'controlPressed',
 						control = 'ENTER'
