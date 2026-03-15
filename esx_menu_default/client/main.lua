@@ -1,9 +1,12 @@
 ESX = nil
 
 Citizen.CreateThread(function()
+	local openedMenus = {}
+	local openedMenuCount = 0
+
 	while ESX == nil do
 		TriggerEvent('esx:getSharedObject', function(obj) ESX = obj end)
-		Citizen.Wait(0)
+		Citizen.Wait(200)
 	end
 
 	local Keys = {
@@ -23,6 +26,13 @@ Citizen.CreateThread(function()
 	local MenuType = 'default'
 
 	local openMenu = function(namespace, name, data)
+		local menuKey = namespace .. '_' .. name
+
+		if not openedMenus[menuKey] then
+			openedMenus[menuKey] = true
+			openedMenuCount = openedMenuCount + 1
+		end
+
 		SendNUIMessage({
 			action    = 'openMenu',
 			namespace = namespace,
@@ -33,11 +43,17 @@ Citizen.CreateThread(function()
 	end
 
 	local closeMenu = function(namespace, name)
+		local menuKey = namespace .. '_' .. name
+
+		if openedMenus[menuKey] then
+			openedMenus[menuKey] = nil
+			openedMenuCount = math.max(openedMenuCount - 1, 0)
+		end
+
 		SendNUIMessage({
 			action    = 'closeMenu',
 			namespace = namespace,
-			name      = name,
-			data      = data
+			name      = name
 		})
 	end
 
@@ -86,63 +102,58 @@ Citizen.CreateThread(function()
 
 	Citizen.CreateThread(function()
 		while true do
+			local sleep = 1000
 
-			Citizen.Wait(10)
+			if openedMenuCount > 0 and IsInputDisabled(0) then
+				sleep = 10
+				local now = GetGameTimer()
 
-			if IsControlPressed(0, Keys['ENTER']) and IsInputDisabled(0) and (GetGameTimer() - GUI.Time) > 150 then
-				SendNUIMessage({
-					action  = 'controlPressed',
-					control = 'ENTER'
-				})
+				if IsControlPressed(0, Keys['ENTER']) and (now - GUI.Time) > 150 then
+					SendNUIMessage({
+						action  = 'controlPressed',
+						control = 'ENTER'
+					})
 
-				GUI.Time = GetGameTimer()
+					GUI.Time = now
+				elseif IsControlPressed(0, Keys['BACKSPACE']) and (now - GUI.Time) > 150 then
+					SendNUIMessage({
+						action  = 'controlPressed',
+						control = 'BACKSPACE'
+					})
+
+					GUI.Time = now
+				elseif IsControlPressed(0, Keys['TOP']) and (now - GUI.Time) > 200 then
+					SendNUIMessage({
+						action  = 'controlPressed',
+						control = 'TOP'
+					})
+
+					GUI.Time = now
+				elseif IsControlPressed(0, Keys['DOWN']) and (now - GUI.Time) > 200 then
+					SendNUIMessage({
+						action  = 'controlPressed',
+						control = 'DOWN'
+					})
+
+					GUI.Time = now
+				elseif IsControlPressed(0, Keys['LEFT']) and (now - GUI.Time) > 150 then
+					SendNUIMessage({
+						action  = 'controlPressed',
+						control = 'LEFT'
+					})
+
+					GUI.Time = now
+				elseif IsControlPressed(0, Keys['RIGHT']) and (now - GUI.Time) > 150 then
+					SendNUIMessage({
+						action  = 'controlPressed',
+						control = 'RIGHT'
+					})
+
+					GUI.Time = now
+				end
 			end
 
-			if IsControlPressed(0, Keys['BACKSPACE']) and IsInputDisabled(0) and (GetGameTimer() - GUI.Time) > 150 then
-				SendNUIMessage({
-					action  = 'controlPressed',
-					control = 'BACKSPACE'
-				})
-
-				GUI.Time = GetGameTimer()
-			end
-
-			if IsControlPressed(0, Keys['TOP']) and IsInputDisabled(0) and (GetGameTimer() - GUI.Time) > 200 then
-				SendNUIMessage({
-					action  = 'controlPressed',
-					control = 'TOP'
-				})
-
-				GUI.Time = GetGameTimer()
-			end
-
-			if IsControlPressed(0, Keys['DOWN']) and IsInputDisabled(0) and (GetGameTimer() - GUI.Time) > 200 then
-				SendNUIMessage({
-					action  = 'controlPressed',
-					control = 'DOWN'
-				})
-
-				GUI.Time = GetGameTimer()
-			end
-
-			if IsControlPressed(0, Keys['LEFT']) and IsInputDisabled(0) and (GetGameTimer() - GUI.Time) > 150 then
-				SendNUIMessage({
-					action  = 'controlPressed',
-					control = 'LEFT'
-				})
-
-				GUI.Time = GetGameTimer()
-			end
-
-			if IsControlPressed(0, Keys['RIGHT']) and IsInputDisabled(0) and (GetGameTimer() - GUI.Time) > 150 then
-				SendNUIMessage({
-					action  = 'controlPressed',
-					control = 'RIGHT'
-				})
-
-				GUI.Time = GetGameTimer()
-			end
-
+			Citizen.Wait(sleep)
 		end
 	end)
 
