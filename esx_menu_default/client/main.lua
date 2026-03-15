@@ -108,7 +108,17 @@ Citizen.CreateThread(function()
 				sleep = 10
 				local now = GetGameTimer()
 
-				if IsControlPressed(0, Keys['ENTER']) and (now - GUI.Time) > 150 then
+				DisableControlAction(0, 200, true) -- Pause menu
+				DisableControlAction(0, Keys['ESC'], true) -- FrontendPauseAlternate
+
+				if IsControlPressed(0, Keys['ESC']) and (now - GUI.Time) > 150 then
+					SendNUIMessage({
+						action  = 'controlPressed',
+						control = 'ESC'
+					})
+
+					GUI.Time = now
+				elseif IsControlPressed(0, Keys['ENTER']) and (now - GUI.Time) > 150 then
 					SendNUIMessage({
 						action  = 'controlPressed',
 						control = 'ENTER'
