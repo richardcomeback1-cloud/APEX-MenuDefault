@@ -86,6 +86,7 @@ Citizen.CreateThread(function()
 				DisableAllControlActions(2)
 				DisableControlAction(0, 200, true) -- Pause menu
 				DisableControlAction(0, 322, true) -- ESC
+				DisableFrontendThisFrame()
 			end
 
 			Citizen.Wait(sleep)

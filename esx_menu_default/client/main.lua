@@ -110,10 +110,12 @@ Citizen.CreateThread(function()
 			local now = GetGameTimer()
 
 			if openedMenuCount > 0 or now < pauseBlockUntil then
-				sleep = 10
+				sleep = 0
 
+				DisableControlAction(0, 199, true) -- Pause menu (P)
 				DisableControlAction(0, 200, true) -- Pause menu
-				DisableControlAction(0, Keys['ESC'], true) -- FrontendPauseAlternate
+				DisableControlAction(0, Keys['ESC'], true) -- Frontend cancel
+				DisableFrontendThisFrame()
 			end
 
 			if openedMenuCount > 0 then
@@ -123,7 +125,7 @@ Citizen.CreateThread(function()
 						control = 'ESC'
 					})
 
-					pauseBlockUntil = now + 300
+					pauseBlockUntil = now + 1000
 					GUI.Time = now
 				elseif IsInputDisabled(0) and IsControlPressed(0, Keys['ENTER']) and (now - GUI.Time) > 150 then
 					SendNUIMessage({
